@@ -1,50 +1,34 @@
-# Empresa de jugos en MySQL
+# 1. Crear base de datos
 
-<!--toc:start-->
-- [Empresa de jugos en MySQL](#empresa-de-jugos-en-mysql)
-  - [1. Crear base de datos](#1-crear-base-de-datos)
-  - [2. Crear las tablas necesarias](#2-crear-las-tablas-necesarias)
-    - [2.1. Tabla de clientes](#21-tabla-de-clientes)
-    - [2.2. Tabla de productos](#22-tabla-de-productos)
-  - [3. Insertar valores en las tablas](#3-insertar-valores-en-las-tablas)
-    - [3.1. Insertar valores en la tabla de productos](#31-insertar-valores-en-la-tabla-de-productos)
-    - [3.2. Insertar valores en la tabla de clientes](#32-insertar-valores-en-la-tabla-de-clientes)
-  - [4. Actualizar registros en las tablas](#4-actualizar-registros-en-las-tablas)
-    - [4.1. Actualizar un solo registro en la tabla de productos](#41-actualizar-un-solo-registro-en-la-tabla-de-productos)
-    - [4.2. Actualizar múltiples registros en la tabla de productos](#42-actualizar-múltiples-registros-en-la-tabla-de-productos)
-  - [5. Eliminar registros en las tablas](#5-eliminar-registros-en-las-tablas)
-    - [5.1. Eliminar registros en la tabla de productos](#51-eliminar-registros-en-la-tabla-de-productos)
-<!--toc:end-->
-
-Este proyecto tiene como objetivo gestionar una base de datos para una empresa de jugos utilizando MySQL. A continuación, se detallan los pasos para crear la base de datos, las tablas necesarias, insertar datos, actualizar registros y eliminar registros.
-
-## 1. Crear base de datos
-
-Primero, creamos la base de datos llamada `jugos`:
+primero, creamos la base de datos llamada `jugos`:
 
 ```sql
 CREATE DATABASE jugos;
 ```
 
+> **nota:** asegúrate de tener permisos para crear bases de datos en tu servidor MySQL.
+
+---
+
 ## 2. Crear las tablas necesarias
 
 ### 2.1. Tabla de clientes
 
-Para el registro de clientes, necesitamos los siguientes campos:
+para el registro de clientes, necesitamos los siguientes campos:
 
-- DNI: Documento Nacional de Identidad del cliente.
-- NOMBRE COMPLETO: Nombre completo del cliente.
-- DIRECCIÓN1: Primera línea de la dirección del cliente.
-- DIRECCIÓN2: Segunda línea de la dirección del cliente (opcional).
-- BARRIO: Barrio donde reside el cliente.
-- CIUDAD: Ciudad donde reside el cliente.
-- PROVINCIA: Provincia donde reside el cliente.
-- CP: Código postal del cliente.
-- EDAD: Edad del cliente.
-- SEXO: Sexo del cliente (M para masculino, F para femenino).
-- LIMITE_CREDITO: Límite de crédito del cliente.
-- VOLUMEN_COMPRA: Volumen de compra del cliente.
-- PRIMERA_COMPRA: Indica si es la primera compra del cliente (1 para sí, 0 para no).
+- `DNI`: documento nacional de identidad del cliente.
+- `NOMBRE COMPLETO`: nombre completo del cliente.
+- `DIRECCIÓN1`: primera línea de la dirección del cliente.
+- `DIRECCIÓN2`: segunda línea de la dirección del cliente (opcional).
+- `BARRIO`: barrio donde reside el cliente.
+- `CIUDAD`: ciudad donde reside el cliente.
+- `PROVINCIA`: provincia donde reside el cliente.
+- `CP`: código postal del cliente.
+- `EDAD`: edad del cliente.
+- `SEXO`: sexo del cliente (`M` para masculino, `F` para femenino).
+- `LIMITE_CREDITO`: límite de crédito del cliente.
+- `VOLUMEN_COMPRA`: volumen de compra del cliente.
+- `PRIMERA_COMPRA`: indica si es la primera compra del cliente (`1` para sí, `0` para no).
 
 ```sql
 CREATE TABLE TBCLIENTES (
@@ -65,16 +49,20 @@ CREATE TABLE TBCLIENTES (
 );
 ```
 
+> **comentario:** la columna `DIRECCION2` es opcional, lo que permite mayor flexibilidad en los datos.
+
+---
+
 ### 2.2. Tabla de productos
 
-Para el registro de productos, necesitamos los siguientes campos:
+para el registro de productos, necesitamos los siguientes campos:
 
-- PRODUCTO: Código del producto.
-- NOMBRE: Nombre del producto.
-- ENVASE: Tipo de envase del producto.
-- VOLUMEN: Volumen del producto.
-- SABOR: Sabor del producto.
-- PRECIO: Precio del producto.
+- `PRODUCTO`: código del producto.
+- `NOMBRE`: nombre del producto.
+- `ENVASE`: tipo de envase del producto.
+- `VOLUMEN`: volumen del producto.
+- `SABOR`: sabor del producto.
+- `PRECIO`: precio del producto.
 
 ```sql
 CREATE TABLE TBPRODUCTOS (
@@ -88,11 +76,15 @@ CREATE TABLE TBPRODUCTOS (
 );
 ```
 
+> **comentario:** asegúrate de que los códigos de producto sean únicos para evitar conflictos.
+
+---
+
 ## 3. Insertar valores en las tablas
 
 ### 3.1. Insertar valores en la tabla de productos
 
-Insertamos algunos productos en la tabla `TBPRODUCTOS`:
+insertamos algunos productos en la tabla `TBPRODUCTOS`:
 
 ```sql
 INSERT INTO TBPRODUCTOS (
@@ -109,9 +101,11 @@ INSERT INTO TBPRODUCTOS (
   ('812829', 'clean', 'lata', '2 litro', 'naranja', 2.81);
 ```
 
+---
+
 ### 3.2. Insertar valores en la tabla de clientes
 
-Insertamos algunos clientes en la tabla `TBCLIENTES`:
+insertamos algunos clientes en la tabla `TBCLIENTES`:
 
 ```sql
 INSERT INTO TBCLIENTES (
@@ -134,54 +128,99 @@ INSERT INTO TBCLIENTES (
   ('456789123', 'Carlos Sanchez', 'Calle 789', 'Casa 3', 'Barrio 3', 'Ciudad 3', 'Provincia 3', '67890', 35, 'M', 2000, 300, 1);
 ```
 
-## 4. Actualizar registros en las tablas
+> **comentario:** asegúrate de que los valores de `DNI` sean únicos, ya que es la clave primaria.
 
-### 4.1. Actualizar un solo registro en la tabla de productos
+---
 
-Actualizamos el volumen de un producto específico:
+## 4. ACTUALIZAR REGISTROS EN LAS TABLAS
 
-```sql
+### 4.1. ACTUALIZAR UN SOLO REGISTRO EN LA TABLA DE PRODUCTOS
+
+ACTUALIZAMOS EL VOLUMEN DE UN PRODUCTO ESPECÍFICO:
+
+```SQL
 UPDATE TBPRODUCTOS 
-SET VOLUMEN = '350 ml' 
+SET VOLUMEN = '350 ML' 
 WHERE PRODUCTO = '812829';
 ```
 
-### 4.2. Actualizar múltiples registros en la tabla de productos
+---
 
-Actualizamos el volumen de varios productos utilizando un `CASE` statement:
+### 4.2. ACTUALIZAR MÚLTIPLES REGISTROS EN LA TABLA DE PRODUCTOS
 
-```sql
--- Actualizar múltiples productos en la tabla 'tbproductos'
-UPDATE tbproductos
-SET volumen = CASE 
-    WHEN producto = '812829' THEN '350 ml'  -- CUANDO el producto es '812829', ENTONCES establece el volumen a '350 ml'
-    WHEN producto = '812830' THEN '500 ml'  -- CUANDO el producto es '812830', ENTONCES establece el volumen a '500 ml'
-    WHEN producto = '812831' THEN '750 ml'  -- CUANDO el producto es '812831', ENTONCES establece el volumen a '750 ml'
-    ELSE volumen -- mantener el valor original si no hay coincidencia
+ACTUALIZAMOS EL VOLUMEN DE VARIOS PRODUCTOS UTILIZANDO UN `CASE` STATEMENT:
+
+```SQL
+UPDATE TBPRODUCTOS
+SET VOLUMEN = CASE 
+    WHEN PRODUCTO = '812829' THEN '350 ML'
+    WHEN PRODUCTO = '812830' THEN '500 ML'
+    WHEN PRODUCTO = '812831' THEN '750 ML'
+    ELSE VOLUMEN
 END
-WHERE producto IN ('812829', '812830', '812831');
+WHERE PRODUCTO IN ('812829', '812830', '812831');
 ```
 
-## 5. Eliminar registros en las tablas
+---
 
-### 5.1. Eliminar registros en la tabla de productos
+## 5. ELIMINAR REGISTROS EN LAS TABLAS
 
-Eliminamis la base de datos `jugos`:
+### 5.1. ELIMINAR REGISTROS EN LA TABLA DE PRODUCTOS
 
-```sql
-DROP DATABASE jugos;
-```
+ELIMINAMOS ALGUNOS PRODUCTOS DE LA TABLA `TBPRODUCTOS`:
 
-Eliminamos la tabla `TBPRODUCTOS`:
-
-```sql
-DROP TABLE TBPRODUCTOS;
-```
-
-Eliminamos algunos registros(productos) de la tabla `TBPRODUCTOS`:
-
-```sql
+```SQL
 DELETE FROM TBPRODUCTOS WHERE PRODUCTO = '838819';
 DELETE FROM TBPRODUCTOS WHERE PRODUCTO = '1037797';
 DELETE FROM TBPRODUCTOS WHERE PRODUCTO = '812829';
 ```
+
+---
+
+## 6. ESTABLECER CLAVES PRIMARIAS
+
+### 6.1. ESTABLECER CLAVE PRIMARIA EN LA TABLA DE CLIENTES
+
+```SQL
+ALTER TABLE TBCLIENTES ADD PRIMARY KEY (DNI);
+```
+
+---
+
+### 6.2. ESTABLECER CLAVE PRIMARIA EN LA TABLA DE PRODUCTOS
+
+```SQL
+ALTER TABLE TBPRODUCTOS ADD PRIMARY KEY (PRODUCTO);
+```
+
+---
+
+### 6.3. VERIFICAR CLAVES PRIMARIAS
+
+PARA VERIFICAR LA CLAVE PRIMARIA EN LA TABLA `TBPRODUCTOS`:
+
+```SQL
+SHOW KEYS FROM TBPRODUCTOS;
+```
+
+PARA VERIFICAR LA CLAVE PRIMARIA EN LA TABLA `TBCLIENTES`:
+
+```SQL
+SHOW KEYS FROM TBCLIENTES;
+```
+
+---
+
+### 6.4. AGREGAR COLUMNA `FECHA_NACIMIENTO`
+
+PARA AGREGAR UNA NUEVA COLUMNA LLAMADA `FECHA_NACIMIENTO` A LA TABLA `TBCLIENTES`:
+
+```SQL
+ALTER TABLE TBCLIENTES ADD FECHA_NACIMIENTO DATE;
+```
+
+---
+
+## 7. Ejecutar consultas
+
+### 7.1.Profundizando en SELECT
