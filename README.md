@@ -224,3 +224,109 @@ ALTER TABLE TBCLIENTES ADD FECHA_NACIMIENTO DATE;
 ## 7. Ejecutar consultas
 
 ### 7.1.Profundizando en SELECT
+
+Para traer todas las filas de la tabla `TBCLIENTES`, utilizamos la sentencia `SELECT *`:
+
+```SQL
+SELECT * FROM TBCLIENTES;
+```
+
+> **nota:** si no se especifica el campo, se devuelve todos los campos.
+
+Si queremos traer solo algunos campos:
+
+```SQL
+SELECT DNI, NOMBRE,EDAD, FECHA_NACIMIENTO FROM TBCLIENTES;
+```
+
+Si queremos traer solo un campo:
+
+```SQL
+SELECT FECHA_NACIMIENTO FROM TBCLIENTES;
+```
+
+Si queremos traer un campo y un valor:
+
+```SQL
+SELECT FECHA_NACIMIENTO, DNI FROM TBCLIENTES;
+```
+
+Podemos utilizar un alias para el campo:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", FECHA_NACIMIENTO as "Fecha de nacimiento" FROM TBCLIENTES;
+```
+
+Podemos limitar la cantidad de registros que devuelve la consulta:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", EDAD as "Años de edad" FROM TBCLIENTES LIMIT 2;
+```
+
+---
+
+### 7.2.  Agregar condiciones a SELECT
+
+Podemos agregar condiciones a la consulta SELECT:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", EDAD as "Años de edad" FROM TBCLIENTES WHERE EDAD > 18;
+```
+
+Otros ejemplos en la tabla `TBPRODUCTOS` condiciones con operadores `=`, `>`, `<`, `>=`, `<=`, `!=`, `IN`:
+
+Si usas > o < en la consulta, debes especificar el valor que quieres comparar:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", EDAD as "Años de edad" FROM TBCLIENTES WHERE NOMBRE > 'Juan Perez'; 
+```
+
+Otros ejemplos en la tabla `TBPRODUCTOS` condiciones con operadores `=`, `>`, `<`, `>=`, `<=`, `!=`:
+
+```SQL\
+SELECT NOMBRE AS "Nombre del producto", ENVASE AS "Envase del producto" FROM TBPRODUCTOS WHERE ENVASE = 'botella pet';
+```
+
+```SQL
+SELECT NOMBRE AS "Nombre del producto", ENVASE AS "Envase del producto" FROM TBPRODUCTOS WHERE ENVASE != 'botella pet';
+```
+
+```SQL
+SELECT NOMBRE AS "Nombre del producto", SABOR AS "Sabor del producto", PRECIO AS "Precio del producto" FROM TBPRODUCTOS WHERE PRECIO <=10.00;
+```
+
+Ejemplo en un rango de precios pricipalmente para tipo floating point:
+
+```SQL
+SELECT NOMBRE AS "Nombre del producto", SABOR AS "Sabor del producto", PRECIO AS "Precio del producto" FROM TBPRODUCTOS WHERE PRECIO BETWEEN 10.00 AND 15.00;
+```
+
+Para filtrar fechas, utilizamos el formato `YYYY-MM-DD`:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", EDAD AS "Edad del cliente", FECHA_NACIMIENTO AS "Precio del producto" FROM TBCLIENTES WHERE FECHA_NACIMIENTO BETWEEN '1999-01-01' AND '2010-12-31';
+```
+
+Filtrar solo con el año:
+
+- Para dia y mes sera solamente reemplazar YEAR por DAY y MONTH:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", EDAD AS "Edad del cliente", FECHA_NACIMIENTO AS "Precio del producto" FROM TBCLIENTES WHERE YEAR(FECHA_NACIMIENTO) = 1995;
+```
+
+Update solo con el año:
+
+```SQL
+UPDATE TBCLIENTES SET FECHA_NACIMIENTO = '1995-01-01' WHERE YEAR(FECHA_NACIMIENTO) = 1995;
+```
+
+Filtros compuestos:
+
+```SQL
+SELECT NOMBRE AS "Nombre del cliente", EDAD AS "Edad del cliente", FECHA_NACIMIENTO AS "Precio del producto" FROM TBCLIENTES WHERE YEAR(FECHA_NACIMIENTO) = 1995 AND MONTH(FECHA_NACIMIENTO) = 1;
+```
+
+---
+
+## 8. Consultas avanzadas
