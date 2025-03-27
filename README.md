@@ -88,13 +88,13 @@ insertamos algunos productos en la tabla `TBPRODUCTOS`:
 
 ```sql
 INSERT INTO TBPRODUCTOS (
-  PRODUCTO, 
-  NOMBRE, 
-  ENVASE, 
-  VOLUMEN, 
-  SABOR, 
+  PRODUCTO,
+  NOMBRE,
+  ENVASE,
+  VOLUMEN,
+  SABOR,
   PRECIO
-) VALUES 
+) VALUES
   ('773912', 'clean', 'botella pet', '1 litro', 'naranja', 8.01),
   ('838819', 'clean', 'botella pet', '1.5 litro', 'naranja', 12.01),
   ('1037797', 'clean', 'botella pet', '2 litro', 'naranja', 16.01),
@@ -109,20 +109,20 @@ insertamos algunos clientes en la tabla `TBCLIENTES`:
 
 ```sql
 INSERT INTO TBCLIENTES (
-  DNI, 
-  NOMBRE, 
-  DIRECCION1, 
-  DIRECCION2, 
-  BARRIO, 
-  CIUDAD, 
-  PROVINCIA, 
-  CP, 
-  EDAD, 
-  SEXO, 
-  LIMITE_CREDITO, 
-  VOLUMEN_COMPRA, 
+  DNI,
+  NOMBRE,
+  DIRECCION1,
+  DIRECCION2,
+  BARRIO,
+  CIUDAD,
+  PROVINCIA,
+  CP,
+  EDAD,
+  SEXO,
+  LIMITE_CREDITO,
+  VOLUMEN_COMPRA,
   PRIMERA_COMPRA
-) VALUES 
+) VALUES
   ('123456789', 'Juan Perez', 'Calle 123', 'Apartado 1', 'Barrio 1', 'Ciudad 1', 'Provincia 1', '12345', 25, 'M', 1000, 100, 1),
   ('987654321', 'Maria Lopez', 'Avenida 456', 'Depto 2', 'Barrio 2', 'Ciudad 2', 'Provincia 2', '54321', 30, 'F', 1500, 200, 1),
   ('456789123', 'Carlos Sanchez', 'Calle 789', 'Casa 3', 'Barrio 3', 'Ciudad 3', 'Provincia 3', '67890', 35, 'M', 2000, 300, 1);
@@ -139,8 +139,8 @@ INSERT INTO TBCLIENTES (
 ACTUALIZAMOS EL VOLUMEN DE UN PRODUCTO ESPECÍFICO:
 
 ```SQL
-UPDATE TBPRODUCTOS 
-SET VOLUMEN = '350 ML' 
+UPDATE TBPRODUCTOS
+SET VOLUMEN = '350 ML'
 WHERE PRODUCTO = '812829';
 ```
 
@@ -152,7 +152,7 @@ ACTUALIZAMOS EL VOLUMEN DE VARIOS PRODUCTOS UTILIZANDO UN `CASE` STATEMENT:
 
 ```SQL
 UPDATE TBPRODUCTOS
-SET VOLUMEN = CASE 
+SET VOLUMEN = CASE
     WHEN PRODUCTO = '812829' THEN '350 ML'
     WHEN PRODUCTO = '812830' THEN '500 ML'
     WHEN PRODUCTO = '812831' THEN '750 ML'
@@ -265,7 +265,7 @@ SELECT NOMBRE AS "Nombre del cliente", EDAD as "Años de edad" FROM TBCLIENTES L
 
 ---
 
-### 7.2.  Agregar condiciones a SELECT
+### 7.2. Agregar condiciones a SELECT
 
 Podemos agregar condiciones a la consulta SELECT:
 
@@ -278,7 +278,7 @@ Otros ejemplos en la tabla `TBPRODUCTOS` condiciones con operadores `=`, `>`, `<
 Si usas > o < en la consulta, debes especificar el valor que quieres comparar:
 
 ```SQL
-SELECT NOMBRE AS "Nombre del cliente", EDAD as "Años de edad" FROM TBCLIENTES WHERE NOMBRE > 'Juan Perez'; 
+SELECT NOMBRE AS "Nombre del cliente", EDAD as "Años de edad" FROM TBCLIENTES WHERE NOMBRE > 'Juan Perez';
 ```
 
 Otros ejemplos en la tabla `TBPRODUCTOS` condiciones con operadores `=`, `>`, `<`, `>=`, `<=`, `!=`:
@@ -330,3 +330,197 @@ SELECT NOMBRE AS "Nombre del cliente", EDAD AS "Edad del cliente", FECHA_NACIMIE
 ---
 
 ## 8. Consultas avanzadas
+
+### 8.1. Para caso importaresmos archivos SQL
+
+Para importar archivos SQL, utilizamos el comando `mysql`:
+
+```bash
+mysql -u [usuario] -p [nombre_base_datos] < archivo.sql
+```
+
+En nuestro caso las tablas se importaron en el siguiente orden:
+
+```bash
+mysql -u root -p jugos < jugos_tabla_de_clientes.sql
+mysql -u root -p jugos < jugos_tabla_de_productos.sql
+mysql -u root -p jugos < jugos_tabla_de_vendedores.sql
+mysql -u root -p jugos < jugos_facturas.sql
+mysql -u root -p jugos < jugos_items_facturas.sql
+```
+
+---
+
+### 8.2. Diagrama de entidad-relación
+
+Tenemos el diagrama de entidad-relación de las tablas importadas en la base de datos `jugos`:
+
+- DiagramaER.png
+  Si quieres ver el diagrama de entidad-relación de la base de datos `jugos`, puedes utilizar el siguiente comando:
+
+```bash
+feh DiagramaER.png
+```
+
+De acuerdo a la imagen, la base de datos `jugos` tiene las siguientes tablas:
+
+- TBCLIENTES
+- TBPRODUCTOS
+- TBVENDEDORES
+- FACTURAS
+- ITEMS_FACTURAS
+
+Y sus respectivas relaciones:
+
+- TBCLIENTES -> TBPRODUCTOS
+- TBCLIENTES -> TBVENDEDORES
+- TBPRODUCTOS -> TBVENDEDORES
+- TBVENDEDORES -> FACTURAS
+- TBVENDEDORES -> ITEMS_FACTURAS
+
+---
+
+Utilizando el diagrama se pueden realizar consultas avanzadas, como por ejemplo:
+
+- Consultas de agregación de datos
+- Consultas de eliminación de datos
+- Consultas de actualización de datos
+
+---
+
+### 8.3 Consultas en base al diagrama de entidad-relación
+
+#### 8.3.1. Consultas realizadas
+
+Usando SELECT:
+
+```SQL
+SELECT * FROM tabla_de_productos WHERE SABOR = 'mango' AND TAMANO = '470 ml';
+```
+
+```SQL
+SELECT * FROM tabla_de_productos WHERE SABOR = 'mango' OR TAMANO = '470 ml';
+```
+
+```SQL
+SELECT * FROM tabla_de_productos WHERE NOT (SABOR = 'mango') OR TAMANO = '470 ml';
+```
+
+```SQL
+SELECT * FROM tabla_de_productos WHERE NOT (SABOR = 'mango' OR TAMANO = '470 ml');
+```
+
+```SQL
+SELECT * FROM tabla_de_productos WHERE SABOR IN ('mango', 'papaya', 'kiwi');
+```
+
+Que es lo mismo que:
+
+```SQL
+SELECT * FROM tabla_de_productos WHERE SABOR = 'mango' OR SABOR = 'papaya' OR SABOR = 'kiwi';
+```
+
+```SQL
+SELECT * FROM tabla_de_clientes WHERE CIUDAD IN ( 'Guadalajara', 'CIUDAD DE MEXICO') AND (EDAD BETWEEN 20 AND 25);
+```
+
+Usando LIKE:
+Para buscar un nombre de cliente que contenga la palabra 'perez' en el campo NOMBRE.
+
+```SQL
+SELECT * FROM tabla_de_clientes WHERE NOMBRE LIKE '%perez%';
+```
+
+Para buscar un nombre de cliente que contenga la palabra 'perez' en el final del campo NOMBRE.
+
+```SQL
+SELECT * FROM tabla_de_clientes WHERE NOMBRE LIKE '%perez';
+```
+
+Busca un nombre de cliente que contenga la palabra 'perez' en el inicio del campo NOMBRE.
+
+```SQL
+SELECT * FROM tabla_de_clientes WHERE NOMBRE LIKE 'perez%';
+```
+
+#### 8.3 Usando DISTINCT, LIMIT, ORDER BY
+
+DISTINCT:
+
+```SQL
+SELECT DISTINCT NOMBRE FROM tabla_de_clientes;
+```
+
+```SQL
+SELECT DISTINCT NOMBRE FROM tabla_de_productos;
+```
+
+```SQL
+SELECT DISTINCT ENVASE, TAMANO, SABOR FROM tabla_de_productos WHERE SABOR = 'mango' OR TAMANO = '470 ml';
+```
+
+LIMIT:
+
+```SQL
+SELECT DISTINCT NOMBRE FROM tabla_de_clientes LIMIT 3;
+```
+
+La tabla se limita a mostrar 5 registros a partir del 3er registro.
+
+```SQL
+SELECT DISTINCT NOMBRE FROM tabla_de_productos LIMIT 3, 5;
+```
+
+ORDER BY:
+
+```SQL
+SELECT DISTINCT NOMBRE FROM tabla_de_clientes ORDER BY NOMBRE;
+```
+
+```SQL
+SELECT DISTINCT * FROM tabla_de_productos ORDER BY PRECIO_DE_LISTA DESC;
+```
+
+```SQL
+SELECT DISTINCT * FROM tabla_de_productos ORDER BY PRECIO_DE_LISTA DESC, NOMBRE ASC;
+```
+
+#### 8.4 Usando COUNT
+
+```SQL
+SELECT COUNT(*) FROM TBCLIENTES;
+```
+
+```SQL
+SELECT COUNT(DNI) FROM TBCLIENTES;
+```
+
+#### 8.5 Usando SUM
+
+```SQL
+SELECT SUM(VOLUMEN_COMPRA) FROM TBCLIENTES;
+```
+
+#### 8.6 Usando AVG
+
+```SQL
+SELECT AVG(VOLUMEN_COMPRA) FROM TBCLIENTES;
+```
+
+#### 8.7 Usando MAX
+
+```SQL
+SELECT MAX(VOLUMEN_COMPRA) FROM TBCLIENTES;
+```
+
+#### 8.8 Usando MIN
+
+```SQL
+SELECT MIN(VOLUMEN_COMPRA) FROM TBCLIENTES;
+```
+
+---
+
+### 8.9 Usando JOIN
+
+JOIN permite unir tablas de manera que se puedan realizar consultas en la base de datos.
