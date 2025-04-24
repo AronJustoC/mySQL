@@ -485,6 +485,66 @@ SELECT DISTINCT * FROM tabla_de_productos ORDER BY PRECIO_DE_LISTA DESC;
 SELECT DISTINCT * FROM tabla_de_productos ORDER BY PRECIO_DE_LISTA DESC, NOMBRE ASC;
 ```
 
+GROUP BY:
+
+```SQL
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes GROUP BY ESTADO;
+```
+
+```SQL
+SELECT ENVASE, AVG(PRECIO_DE_LISTA) AS PRECIO_PROMEDIO
+FROM tabla_de_productos GROUP BY ENVASE;
+```
+
+```SQL
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS PRECIO_MAXIMO
+FROM tabla_de_productos GROUP BY ENVASE;
+```
+
+```SQL
+SELECT ENVASE, COUNT(*)
+FROM tabla_de_productos GROUP BY ENVASE;
+```
+
+```SQL
+SELECT BARRIO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes GROUP BY BARRIO;
+```
+
+```SQL
+SELECT BARRIO, AVG(LIMITE_DE_CREDITO) AS LIMITE_MEDIO
+FROM tabla_de_clientes GROUP BY BARRIO;
+```
+
+```SQL
+SELECT NOMBRE, COUNT(*)
+FROM tabla_de_clientes GROUP BY NOMBRE;
+```
+
+```SQL
+SELECT CIUDAD, COUNT(*)
+FROM tabla_de_clientes GROUP BY CIUDAD;
+```
+
+```SQL
+SELECT CIUDAD, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes GROUP BY CIUDAD;
+```
+
+```SQL
+SELECT ESTADO, COUNT(*)
+FROM tabla_de_clientes GROUP BY ESTADO;
+```
+
+```SQL
+SELECT ESTADO, BARRIO, MAX(LIMITE_DE_CREDITO) AS LIMITE, EDAD
+FROM tabla_de_clientes
+WHERE EDAD >= 20
+GROUP BY ESTADO, BARRIO, EDAD
+ORDER BY EDAD DESC;
+```
+
 #### 8.4 Usando COUNT
 
 ```SQL
@@ -519,8 +579,119 @@ SELECT MAX(VOLUMEN_COMPRA) FROM TBCLIENTES;
 SELECT MIN(VOLUMEN_COMPRA) FROM TBCLIENTES;
 ```
 
----
+#### 8.9 Usando HAVING
 
-### 8.9 Usando JOIN
+Por lo general va después de GROUP BY:
 
-JOIN permite unir tablas de manera que se puedan realizar consultas en la base de datos.
+```SQL
+SELECT SUM(EDAD) FROM tabla_de_clientes HAVING SUM(EDAD) > 1000;
+```
+
+```SQL
+SELECT ESTADO, SUM(LIMITE_DE_CREDITO) AS LIMITE_TOTAL
+FROM tabla_de_clientes
+GROUP BY ESTADO
+HAVING SUM(LIMITE_DE_CREDITO) > 1000000;
+```
+
+```SQL
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS PRECIO_MAXIMO,
+MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO
+FROM tabla_de_productos GROUP BY ENVASE
+HAVING SUM(PRECIO_DE_LISTA) > 80;
+```
+
+```txt
++-------------------+---------------+---------------+
+| ENVASE            | PRECIO_MAXIMO | PRECIO_MINIMO |
++-------------------+---------------+---------------+
+| Botella de Vidrio |         13.31 |           3.3 |
+| Botella PET       |         38.01 |             7 |
++-------------------+---------------+---------------+
+```
+
+```SQL
+SELECT ENVASE, MAX(PRECIO_DE_LISTA) AS PRECIO_MAXIMO,
+MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO
+FROM tabla_de_productos GROUP BY ENVASE
+HAVING SUM(PRECIO_DE_LISTA) > 80
+AND MAX(PRECIO_DE_LISTA) >= 20;
+```
+
+```txt
++-------------------+---------------+---------------+
+| ENVASE            | PRECIO_MAXIMO | PRECIO_MINIMO |
++-------------------+---------------+---------------+
+| Botella de Vidrio |         13.31 |           3.3 |
++-------------------+---------------+---------------+
+```
+
+#### 8.10. Usando CASE para filtrar datos
+
+```SQL
+SELECT NOMBRE_DEL_PRODUCTO, PRECIO_DE_LISTA,
+CASE
+  WHEN PRECIO_DE_LISTA >= 12 THEN 'Costoso'
+  WHEN PRECIO_DE_LISTA >= 5 AND PRECIO_DE_LISTA < 12 THEN 'Asequible'
+  ELSE 'Barato'
+END AS PRECIO
+FROM tabla_de_productos;
+```
+
+```txt
++---------------------+-----------------+-----------+
+| NOMBRE_DEL_PRODUCTO | PRECIO_DE_LISTA | PRECIO    |
++---------------------+-----------------+-----------+
+| Sabor da Montaña    |            6.31 | Asequible |
+| Línea Citrus        |               7 | Asequible |
+| Vida del Campo      |            8.41 | Asequible |
+| Vida del Campo      |           19.51 | Costoso   |
+| Vida del Campo      |           24.01 | Costoso   |
+| Festival de Sabores |           38.01 | Costoso   |
+| Clean               |           16.01 | Costoso   |
+| Light               |            4.56 | Barato    |
+| Línea Citrus        |             4.9 | Barato    |
+| Línea Citrus        |             4.9 | Barato    |
+| Verano              |             3.3 | Barato    |
+| Verano              |            5.18 | Asequible |
+| Refrescante         |           11.01 | Asequible |
+----------------------+-----------------+-----------+
+35 rows in set (0.01 sec)
+```
+
+```SQL
+SELECT ENVASE, SABOR,
+CASE
+  WHEN PRECIO_DE_LISTA >= 12 THEN 'Costoso'
+  WHEN PRECIO_DE_LISTA >= 5 AND PRECIO_DE_LISTA < 12 THEN 'Asequible'
+  ELSE 'Barato'
+END AS PRECIO, MIN(PRECIO_DE_LISTA) AS PRECIO_MINIMO
+FROM tabla_de_productos
+WHERE TAMANO = '700 ml'
+GROUP BY ENVASE,
+CASE
+  WHEN PRECIO_DE_LISTA >= 12 THEN 'Costoso'
+  WHEN PRECIO_DE_LISTA >= 5 AND PRECIO_DE_LISTA < 12 THEN 'Asequible'
+  ELSE 'Barato'
+END
+ORDER BY ENVASE;
+```
+
+```txt
++-------------------+-----------------+-----------+
+| ENVASE            | SABOR           | PRECIO    |
++-------------------+-----------------+-----------+
+| Botella de Vidrio | Uva             | Asequible |
+| Botella PET       | Lima/Limón      | Asequible |
+| Botella de Vidrio | Cereza/Manzana  | Asequible |
+| Botella PET       | Sandía          | Costoso   |
+| Botella PET       | Cereza/Manzana  | Costoso   |
+| Botella PET       | Asái            | Costoso   |
+| Botella PET       | Naranja         | Costoso   |
+| Lata              | Sandía          | Barato    |
+| Botella de Vidrio | Lima/Limón      | Barato    |
+| Botella de Vidrio | Limón           | Barato    |
++-------------------+-----------------+-----------+
+```
+
+#### 8.11. Uso de JOINS para filtrar datos en tablas relacionadas
